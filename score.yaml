@@ -1,0 +1,35 @@
+apiVersion: score.dev/v1b1
+
+metadata:
+  name: quickstart
+
+service:
+  ports:
+    www:
+      port: 8000
+      targetPort: 8000
+
+containers:
+  hello-world:
+    #image: ghcr.io/astromechza/demo-app:latest
+    image: ghcr.io/jayonthenet/pyblob:latest
+    variables:
+      # OVERRIDE_COLOR: "#ababab"
+      # OVERRIDE_POSTGRES: "postgres://${resources.db.username}:${resources.db.password}@${resources.db.host}:${resources.db.port}/${resources.db.name}"
+      BLOB_ACC_NAME: ${resources.blobby.account}
+      BLOB_CONTAINER_NAME: ${resources.blobby.container}
+
+resources:
+  route:
+    type: route
+    params:
+      host: ${resources.dns.host}
+      path: /
+      port: 8000
+  dns:
+    type: dns
+  # db:
+  #   type: postgres
+  blobby:
+    type: azure-blob
+    class: basic-admin
